@@ -1,7 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { PushLogService } from './push-log.service';
 import { CreatePushLogDto } from './dto/create-push-log.dto';
 import { UpdatePushLogDto } from './dto/update-push-log.dto';
+import { FindAllPushLogDto } from './dto/find-all-push-log.dto';
+import { SaveFirstSurveyDto } from './dto/save-first-survey.dto';
 
 @Controller('push-log')
 export class PushLogController {
@@ -13,13 +24,8 @@ export class PushLogController {
   }
 
   @Get()
-  findAll() {
-    return this.pushLogService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.pushLogService.findOne(+id);
+  findAll(@Query() query: FindAllPushLogDto) {
+    return this.pushLogService.findAll(query);
   }
 
   @Patch(':id')
@@ -30,5 +36,14 @@ export class PushLogController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.pushLogService.remove(+id);
+  }
+
+  @Get('first')
+  saveFirstSurvey(@Query() query: SaveFirstSurveyDto) {
+    return this.pushLogService.saveFirstSurvey(query);
+  }
+  @Get('latest')
+  saveLatestSurvey(@Query() query: SaveFirstSurveyDto) {
+    return this.pushLogService.save(query);
   }
 }

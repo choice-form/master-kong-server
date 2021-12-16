@@ -1,4 +1,4 @@
-import { PagingDto } from 'src/dto/index.dto';
+import { PagingDto } from 'src/dto/paging.dto';
 import { FindManyOptions } from 'typeorm';
 
 /**
@@ -43,9 +43,9 @@ export function mergePaging<T>(
   findOptions: FindManyOptions<T>,
   pagingDto?: PagingDto,
 ) {
-  const { page, page_size } = pagingDto;
-  const take = page_size ? parseInt(`${page_size}`) : 10;
-  const skip = page ? (parseInt(`${page}`) - 1) * parseInt(`${page_size}`) : 0;
+  const { page, pageSize } = pagingDto;
+  const take = pageSize ? parseInt(`${pageSize}`) : 10;
+  const skip = page ? (parseInt(`${page}`) - 1) * parseInt(`${pageSize}`) : 0;
   if (!findOptions) {
     findOptions = {};
   }

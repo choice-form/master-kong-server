@@ -1,26 +1,51 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { mergePaging } from 'src/utils';
+import { FindManyOptions, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
+import { FindAllUserDto } from './dto/find-all-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
   create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+    return this.userRepository.save(createUserDto);
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async batch(userList: CreateUserDto[]) {
+    const list = [];
+    for (let i = 0; i < userList.length; i++) {
+      const user = await this.create(userList[i]);
+      list.push(user);
+    }
+    return list;
+  }
+
+  findAll(findAllUserDto: FindAllUserDto) {
+    let findOpts: FindManyOptions<User> = null;
+    findOpts = mergePaging(findOpts, findAllUserDto);
+    findOpts.relations = ['pushLog'];
+
+    return this.userRepository.findAndCount(findOpts);
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} user`;
+    return this.userRepository.findOne(id, {
+      relations: ['pushLog'],
+    });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    // const user = await this.userRepository.findOne(id);
+    return await this.userRepository.update({ id }, updateUserDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} user`;
+    return this.userRepository.delete(id);
   }
 }

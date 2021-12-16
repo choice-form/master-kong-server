@@ -1,9 +1,17 @@
+import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
+import { PushModule } from '../push/push.module';
 import { QueueService } from './queue.service';
-import { QueueController } from './queue.controller';
+import { SurveyProcessor } from './survey.processor';
 
 @Module({
-  controllers: [QueueController],
-  providers: [QueueService]
+  imports: [
+    BullModule.registerQueue({
+      name: 'survey',
+    }),
+    PushModule,
+  ],
+  providers: [QueueService, SurveyProcessor],
+  exports: [QueueService],
 })
 export class QueueModule {}

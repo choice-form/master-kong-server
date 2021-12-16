@@ -1,26 +1,113 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AnswerService } from 'src/common/service/answer.service';
+import { mergePaging } from 'src/utils';
+import { FindManyOptions, Repository } from 'typeorm';
+import { QueueService } from '../queue/queue.service';
+import { User } from '../user/entities/user.entity';
 import { CreatePushLogDto } from './dto/create-push-log.dto';
+import { FindAllPushLogDto } from './dto/find-all-push-log.dto';
 import { UpdatePushLogDto } from './dto/update-push-log.dto';
-
+import { PushLog } from './entities/push-log.entity';
 @Injectable()
 export class PushLogService {
+  constructor(
+    @InjectRepository(PushLog)
+    private readonly pushLogRepository: Repository<PushLog>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private readonly answerService: AnswerService,
+    private readonly queueService: QueueService,
+  ) {}
   create(createPushLogDto: CreatePushLogDto) {
-    return 'This action adds a new pushLog';
+    return this.pushLogRepository.save(createPushLogDto);
   }
 
-  findAll() {
-    return `This action returns all pushLog`;
+  findAll(findAllPushLogDto: FindAllPushLogDto) {
+    let findOpts: FindManyOptions<PushLog> = null;
+    findOpts = mergePaging(findOpts, findAllPushLogDto);
+    return this.pushLogRepository.findAndCount(findOpts);
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} pushLog`;
+    return this.pushLogRepository.findOne(id);
   }
 
   update(id: number, updatePushLogDto: UpdatePushLogDto) {
-    return `This action updates a #${id} pushLog`;
+    return this.pushLogRepository.update({ id }, updatePushLogDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} pushLog`;
+    return this.pushLogRepository.delete(id);
+  }
+
+  async pushLogic(data: {
+    mobile: string;
+    result: any;
+    resultId: string;
+    surveyId: string;
+    survey: string;
+  }) {
+    const { mobile } = data;
+    const { eatTime } = this.answerService.analyze(data.result);
+    const eatDate = new Date(eatTime).getTime();
+    const now = new Date().getTime();
+    const interval = 1000 * 60 * 60;
+    let next = now - (eatDate + interval);
+    if (next < 0) {
+      await this.queueService.push({ mobile }, { delay: -next });
+      await this.queueService.push({ mobile }, { delay: -next + 1 * interval });
+      await this.queueService.push({ mobile }, { delay: -next + 2 * interval });
+      return;
+    }
+
+    next = now - (eatDate + interval * 2);
+    if (next < 0) {
+      await this.queueService.push({ mobile }, { delay: -next });
+      await this.queueService.push({ mobile }, { delay: -next + interval });
+      return;
+    }
+    next = now - (eatDate + interval * 3);
+    if (next < 0) {
+      await this.queueService.push({ mobile }, { delay: -next });
+      return;
+    }
+  }
+
+  async saveFirstSurvey(data: {
+    mobile: string;
+    result: any;
+    resultId: string;
+    surveyId: string;
+    survey: string;
+  }) {
+    await this.save(data);
+    await this.pushLogic(data);
+  }
+
+  async save(data: {
+    mobile: string;
+    result: any;
+    resultId: string;
+    surveyId: string;
+    survey: string;
+  }) {
+    const { mobile, result, resultId, surveyId, survey } = data;
+    const user = await this.userRepository.findOne({ mobile });
+    if (!user) {
+      throw new HttpException(
+        `the user of ${data.mobile} is not found`,
+        HttpStatus.FORBIDDEN,
+      );
+    }
+    const newLog: PushLog = {
+      survey,
+      surveyId,
+      result,
+      resultId,
+      user,
+    };
+
+    await this.pushLogRepository.save(newLog);
   }
 }

@@ -1,26 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { CreateQueueDto } from './dto/create-queue.dto';
-import { UpdateQueueDto } from './dto/update-queue.dto';
+import { InjectQueue } from '@nestjs/bull';
+import Bull, { Queue } from 'bull';
 
 @Injectable()
 export class QueueService {
-  create(createQueueDto: CreateQueueDto) {
-    return 'This action adds a new queue';
-  }
+  constructor(
+    @InjectQueue('survey')
+    private readonly surveyQueue: Queue,
+  ) {}
 
-  findAll() {
-    return `This action returns all queue`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} queue`;
-  }
-
-  update(id: number, updateQueueDto: UpdateQueueDto) {
-    return `This action updates a #${id} queue`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} queue`;
+  async push(data: { mobile: string }, opts?: Bull.JobOptions) {
+    await this.surveyQueue.add('push', data, opts);
   }
 }

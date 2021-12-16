@@ -3,12 +3,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './modules/user/user.module';
-import { AnswerModule } from './modules/answer/answer.module';
 import { PushLogModule } from './modules/push-log/push-log.module';
 import { PushModule } from './modules/push/push.module';
 import { BullModule } from '@nestjs/bull';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { QueueModule } from './modules/queue/queue.module';
+import { SysModule } from './modules/sys/sys.module';
+import { MobileTemplateModule } from './modules/template/mobile-template/mobile-template.module';
 
 @Module({
   imports: [
@@ -40,10 +41,11 @@ import { QueueModule } from './modules/queue/queue.module';
       }),
     }),
     UserModule,
-    AnswerModule,
     PushLogModule,
     PushModule,
     QueueModule,
+    SysModule,
+    MobileTemplateModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,0 +1,16 @@
+@baseUrl=http://localhost:6500/v1/auth
+@access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxlbyIsIm5pY2tuYW1lIjoibGVvIiwiaWQiOjEsImlhdCI6MTYzNDcxODU1OCwiZXhwIjoxNjM0NzQwMTU4fQ.iqcKrq9ldgCMGfJii_yT-JXBz_QQP-LyDHUg06A_ibw
+
+# 用户登录
+### 登录
+POST {{baseUrl}}/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "username":"leo",
+  "password":"123"
+}
+
+###验证jwt
+get {{baseUrl}}/user HTTP/1.1
+Authorization: Bearer {{access_token}}
