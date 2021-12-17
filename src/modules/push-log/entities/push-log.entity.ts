@@ -7,9 +7,6 @@ export class PushLog extends CommonEntity {
   @Column()
   surveyId: string;
 
-  @Column()
-  survey: string;
-
   @ManyToOne(() => User, (user) => user.pushLogList)
   user: User;
 
@@ -18,4 +15,7 @@ export class PushLog extends CommonEntity {
 
   @Column('varchar')
   resultId: string;
+
+  @Column('simple-json')
+  answer: string;
 }

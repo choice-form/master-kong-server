@@ -6,7 +6,7 @@ export class SaveFirstSurveyDto {
   @IsNotEmpty()
   surveyId: string;
   @IsNotEmpty()
-  survey: string;
+  answer: string;
   @IsNotEmpty()
   result: string;
   @IsNotEmpty()

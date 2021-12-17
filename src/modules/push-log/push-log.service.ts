@@ -7,6 +7,7 @@ import { QueueService } from '../queue/queue.service';
 import { User } from '../user/entities/user.entity';
 import { CreatePushLogDto } from './dto/create-push-log.dto';
 import { FindAllPushLogDto } from './dto/find-all-push-log.dto';
+import { SaveFirstSurveyDto } from './dto/save-first-survey.dto';
 import { UpdatePushLogDto } from './dto/update-push-log.dto';
 import { PushLog } from './entities/push-log.entity';
 @Injectable()
@@ -41,13 +42,7 @@ export class PushLogService {
     return this.pushLogRepository.delete(id);
   }
 
-  async pushLogic(data: {
-    mobile: string;
-    result: any;
-    resultId: string;
-    surveyId: string;
-    survey: string;
-  }) {
+  async pushLogic(data: SaveFirstSurveyDto) {
     const { mobile } = data;
     const { eatTime } = this.answerService.analyze(data.result);
     const eatDate = new Date(eatTime).getTime();
@@ -75,25 +70,13 @@ export class PushLogService {
     }
   }
 
-  async saveFirstSurvey(data: {
-    mobile: string;
-    result: any;
-    resultId: string;
-    surveyId: string;
-    survey: string;
-  }) {
+  async saveFirstSurvey(data: SaveFirstSurveyDto) {
     await this.save(data);
     await this.pushLogic(data);
   }
 
-  async save(data: {
-    mobile: string;
-    result: any;
-    resultId: string;
-    surveyId: string;
-    survey: string;
-  }) {
-    const { mobile, result, resultId, surveyId, survey } = data;
+  async save(data: SaveFirstSurveyDto) {
+    const { mobile, result, resultId, surveyId, answer } = data;
     const user = await this.userRepository.findOne({ mobile });
     if (!user) {
       throw new HttpException(
@@ -102,11 +85,11 @@ export class PushLogService {
       );
     }
     const newLog: PushLog = {
-      survey,
       surveyId,
       result,
       resultId,
       user,
+      answer,
     };
 
     await this.pushLogRepository.save(newLog);
