@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateMobileTemplateDto } from './dto/create-mobile-template.dto';
@@ -11,7 +11,11 @@ export class MobileTemplateService {
     @InjectRepository(MobileTemplate)
     private readonly mobileTemplateRepository: Repository<MobileTemplate>,
   ) {}
-  create(createMobileTemplateDto: CreateMobileTemplateDto) {
+  async create(createMobileTemplateDto: CreateMobileTemplateDto) {
+    const res = await this.findOne();
+    if (res) {
+      throw new HttpException('the template has one', HttpStatus.FORBIDDEN);
+    }
     return this.mobileTemplateRepository.save(createMobileTemplateDto);
   }
 

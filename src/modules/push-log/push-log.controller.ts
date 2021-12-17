@@ -38,12 +38,12 @@ export class PushLogController {
     return this.pushLogService.remove(+id);
   }
 
-  @Get('first')
-  saveFirstSurvey(@Query() query: SaveFirstSurveyDto) {
+  @Post('first')
+  saveFirstSurvey(@Body() query: SaveFirstSurveyDto) {
     return this.pushLogService.saveFirstSurvey(query);
   }
-  @Get('latest')
-  saveLatestSurvey(@Query() query: SaveFirstSurveyDto) {
+  @Post('latest')
+  saveLatestSurvey(@Body() query: SaveFirstSurveyDto) {
     return this.pushLogService.save(query);
   }
 }

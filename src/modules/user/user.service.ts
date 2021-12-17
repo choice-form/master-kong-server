@@ -29,14 +29,14 @@ export class UserService {
   findAll(findAllUserDto: FindAllUserDto) {
     let findOpts: FindManyOptions<User> = null;
     findOpts = mergePaging(findOpts, findAllUserDto);
-    findOpts.relations = ['pushLog'];
+    findOpts.relations = ['pushLogList'];
 
     return this.userRepository.findAndCount(findOpts);
   }
 
   findOne(id: number) {
     return this.userRepository.findOne(id, {
-      relations: ['pushLog'],
+      relations: ['pushLogList'],
     });
   }
 

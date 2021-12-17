@@ -52,6 +52,7 @@ export class PushLogService {
     const { eatTime } = this.answerService.analyze(data.result);
     const eatDate = new Date(eatTime).getTime();
     const now = new Date().getTime();
+    // 推送间隔1小时
     const interval = 1000 * 60 * 60;
     let next = now - (eatDate + interval);
     if (next < 0) {

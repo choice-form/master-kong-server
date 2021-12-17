@@ -33,7 +33,7 @@ import { MobileTemplateModule } from './modules/template/mobile-template/mobile-
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => ({
-        prefix: config.get('master_kong'),
+        prefix: config.get('BULL_PREFIX'),
         redis: {
           host: config.get<string>('BULL_HOST'),
           port: parseInt(config.get('BULL_PORT')),
