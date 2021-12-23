@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AnswerService } from 'src/common/service/answer.service';
 import { mergePaging } from 'src/utils';
 import { FindManyOptions, Repository } from 'typeorm';
+import { AnswerParamsService } from '../answer-params/answer-params.service';
 import { QueueService } from '../queue/queue.service';
 import { User } from '../user/entities/user.entity';
 import { CreatePushLogDto } from './dto/create-push-log.dto';
@@ -18,6 +19,7 @@ export class PushLogService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly answerService: AnswerService,
+    private readonly answerParamService: AnswerParamsService,
     private readonly queueService: QueueService,
   ) {}
   create(createPushLogDto: CreatePushLogDto) {
@@ -47,7 +49,8 @@ export class PushLogService {
     const eatDate = new Date(eatTime).getTime();
     const now = new Date().getTime();
     // 推送间隔1小时
-    const interval = 1000 * 60 * 60;
+    const { delay_time } = await this.answerParamService.getOne();
+    const interval = 1000 * 60 * delay_time;
     let next = now - (eatDate + interval);
     if (next < 0) {
       await this.queueService.push(

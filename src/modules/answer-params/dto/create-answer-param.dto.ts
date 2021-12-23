@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsInt, IsString } from 'class-validator';
 
 export class CreateAnswerParamDto {
   @IsString()
@@ -6,4 +6,7 @@ export class CreateAnswerParamDto {
 
   @IsString()
   eat_time_node_title: string;
+
+  @IsInt()
+  delay_time: number;
 }
