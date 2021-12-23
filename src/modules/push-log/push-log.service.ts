@@ -51,21 +51,39 @@ export class PushLogService {
     const interval = 1000 * 60 * 60;
     let next = now - (eatDate + interval);
     if (next < 0) {
-      await this.queueService.push({ mobile }, { delay: -next });
-      await this.queueService.push({ mobile }, { delay: -next + 1 * interval });
-      await this.queueService.push({ mobile }, { delay: -next + 2 * interval });
+      await this.queueService.push(
+        { mobile, template_name: 'first' },
+        { delay: -next },
+      );
+      await this.queueService.push(
+        { mobile, template_name: 'second' },
+        { delay: -next + 1 * interval },
+      );
+      await this.queueService.push(
+        { mobile, template_name: 'third' },
+        { delay: -next + 2 * interval },
+      );
       return;
     }
 
     next = now - (eatDate + interval * 2);
     if (next < 0) {
-      await this.queueService.push({ mobile }, { delay: -next });
-      await this.queueService.push({ mobile }, { delay: -next + interval });
+      await this.queueService.push(
+        { mobile, template_name: 'second' },
+        { delay: -next },
+      );
+      await this.queueService.push(
+        { mobile, template_name: 'third' },
+        { delay: -next + interval },
+      );
       return;
     }
     next = now - (eatDate + interval * 3);
     if (next < 0) {
-      await this.queueService.push({ mobile }, { delay: -next });
+      await this.queueService.push(
+        { mobile, template_name: 'third' },
+        { delay: -next },
+      );
       return;
     }
   }

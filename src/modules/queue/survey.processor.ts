@@ -6,7 +6,7 @@ export class SurveyProcessor {
   constructor(private readonly pushService: PushService) {}
 
   @Process('push')
-  async pushSurvey(job: Job<{ mobile: string }>) {
+  async pushSurvey(job: Job<{ mobile: string; template_name: string }>) {
     const payload = job.data;
     await this.pushService.push(payload);
   }

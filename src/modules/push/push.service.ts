@@ -8,8 +8,10 @@ export class PushService {
     private readonly ymApi: YMApi,
     private readonly mobileTemplate: MobileTemplateService,
   ) {}
-  async push(payload: { mobile: string }) {
-    const template = await this.mobileTemplate.findOne();
+  async push(payload: { mobile: string; template_name: string }) {
+    const template = await this.mobileTemplate.findByName(
+      payload.template_name,
+    );
     return this.ymApi.sendMessageByYm({
       mobile: payload.mobile,
       content: template.content,

@@ -12,9 +12,12 @@ export class MobileTemplateService {
     private readonly mobileTemplateRepository: Repository<MobileTemplate>,
   ) {}
   async create(createMobileTemplateDto: CreateMobileTemplateDto) {
-    const res = await this.findOne();
-    if (res) {
-      throw new HttpException('the template has one', HttpStatus.FORBIDDEN);
+    const count = await this.mobileTemplateRepository.count();
+    if (count >= 3) {
+      throw new HttpException(
+        '3 template records are full',
+        HttpStatus.FORBIDDEN,
+      );
     }
     return this.mobileTemplateRepository.save(createMobileTemplateDto);
   }
@@ -25,6 +28,14 @@ export class MobileTemplateService {
 
   findOne(id?: number) {
     return this.mobileTemplateRepository.findOne(id);
+  }
+
+  findByName(name: string) {
+    return this.mobileTemplateRepository.findOne({
+      where: {
+        name,
+      },
+    });
   }
 
   update(id: number, updateMobileTemplateDto: UpdateMobileTemplateDto) {

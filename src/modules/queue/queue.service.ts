@@ -9,7 +9,10 @@ export class QueueService {
     private readonly surveyQueue: Queue,
   ) {}
 
-  async push(data: { mobile: string }, opts?: Bull.JobOptions) {
+  async push(
+    data: { mobile: string; template_name: string },
+    opts?: Bull.JobOptions,
+  ) {
     await this.surveyQueue.add('push', data, opts);
   }
 }
