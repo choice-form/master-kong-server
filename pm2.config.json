@@ -1,0 +1,9 @@
+[
+  {
+    "name":"master-kong-server",
+    "script": "./dist/main.js",
+    "log_date_format": "YYYY-MM-DD HH:mm Z",
+    "error_file": "./pm2/log/main-error.log",
+    "out_file": "./pm2/log/main-out.log"
+  }
+]
