@@ -43,7 +43,7 @@ export class PushLogService {
   }
 
   async pushLogic(data: SaveFirstSurveyDto) {
-    const { eatTime, mobile } = this.answerService.dispose(data);
+    const { eatTime, mobile } = await this.answerService.dispose(data);
     const eatDate = new Date(eatTime).getTime();
     const now = new Date().getTime();
     // 推送间隔1小时
@@ -94,7 +94,7 @@ export class PushLogService {
 
   async save(data: SaveFirstSurveyDto) {
     const { result, resultId, surveyId, answer } = data;
-    const { mobile } = this.answerService.dispose(data);
+    const { mobile } = await this.answerService.dispose(data);
     const user = await this.userRepository.findOne({ mobile });
     if (!user) {
       throw new HttpException(

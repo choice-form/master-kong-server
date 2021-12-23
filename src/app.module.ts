@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { QueueModule } from './modules/queue/queue.module';
 import { SysModule } from './modules/sys/sys.module';
 import { MobileTemplateModule } from './modules/template/mobile-template/mobile-template.module';
+import { AnswerParamsModule } from './modules/answer-params/answer-params.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { MobileTemplateModule } from './modules/template/mobile-template/mobile-
     QueueModule,
     SysModule,
     MobileTemplateModule,
+    AnswerParamsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -6,9 +6,14 @@ import { PushLog } from './entities/push-log.entity';
 import { User } from '../user/entities/user.entity';
 import { AnswerService } from 'src/common/service/answer.service';
 import { QueueModule } from '../queue/queue.module';
+import { AnswerParamsModule } from '../answer-params/answer-params.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PushLog, User]), QueueModule],
+  imports: [
+    TypeOrmModule.forFeature([PushLog, User]),
+    QueueModule,
+    AnswerParamsModule,
+  ],
   controllers: [PushLogController],
   providers: [PushLogService, AnswerService],
 })

@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import dayjs from 'dayjs';
+import { AnswerParamsService } from 'src/modules/answer-params/answer-params.service';
 import { SaveFirstSurveyDto } from 'src/modules/push-log/dto/save-first-survey.dto';
 
 export interface IOption {
@@ -15,10 +16,13 @@ export interface INode {
 
 @Injectable()
 export class AnswerService {
-  eatTitle = '吃面时间';
-  mobileTitle = '手机号';
+  constructor(private readonly answerParamService: AnswerParamsService) {}
 
-  dispose(data: SaveFirstSurveyDto) {
+  getParams() {
+    return this.answerParamService.getOne();
+  }
+
+  async dispose(data: SaveFirstSurveyDto) {
     const nodeList = this.preAnalyze(data);
     return this.analyze(nodeList);
   }
@@ -30,15 +34,17 @@ export class AnswerService {
   }
 
   // TODO: 需要实现,返回一个吃面时间
-  analyze(result: INode[]): { eatTime: Date; mobile: string } {
+  async analyze(result: INode[]): Promise<{ eatTime: Date; mobile: string }> {
+    const { eat_time_node_title, mobile_node_title } =
+      await this.answerParamService.getOne();
     let eatTime: Date = null;
     let mobile: string = null;
     const eatNode = result.find((n) => {
-      return n.title === this.eatTitle;
+      return n.title === eat_time_node_title;
     });
 
     const mobileNode = result.find((n) => {
-      return n.title === this.mobileTitle;
+      return n.title === mobile_node_title;
     });
 
     if (mobileNode.options) {
