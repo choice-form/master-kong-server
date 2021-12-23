@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import dayjs from 'dayjs';
+import * as dayjs from 'dayjs';
 import { AnswerParamsService } from 'src/modules/answer-params/answer-params.service';
 import { SaveFirstSurveyDto } from 'src/modules/push-log/dto/save-first-survey.dto';
 
