@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { MobileTemplateService } from './mobile-template.service';
 import { CreateMobileTemplateDto } from './dto/create-mobile-template.dto';
 import { UpdateMobileTemplateDto } from './dto/update-mobile-template.dto';
-
+import { AuthGuard } from '@nestjs/passport';
+@UseGuards(AuthGuard('jwt'))
 @Controller('mobile-template')
 export class MobileTemplateController {
   constructor(private readonly mobileTemplateService: MobileTemplateService) {}

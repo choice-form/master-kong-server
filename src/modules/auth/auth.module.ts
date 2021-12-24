@@ -5,11 +5,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { SysUserModule } from '../sys/sys-user/sys-user.module';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule,
     JwtModule.registerAsync({
+      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => ({
         secret: config.get('JWT_SECRET'),

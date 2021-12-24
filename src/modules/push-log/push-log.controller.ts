@@ -6,13 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { PushLogService } from './push-log.service';
 import { CreatePushLogDto } from './dto/create-push-log.dto';
 import { UpdatePushLogDto } from './dto/update-push-log.dto';
-// import { FindAllPushLogDto } from './dto/find-all-push-log.dto';
 import { SaveFirstSurveyDto } from './dto/save-first-survey.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('push-log')
 export class PushLogController {
   constructor(private readonly pushLogService: PushLogService) {}

@@ -11,6 +11,7 @@ import { QueueModule } from './modules/queue/queue.module';
 import { SysModule } from './modules/sys/sys.module';
 import { MobileTemplateModule } from './modules/template/mobile-template/mobile-template.module';
 import { AnswerParamsModule } from './modules/answer-params/answer-params.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { AnswerParamsModule } from './modules/answer-params/answer-params.module
     SysModule,
     MobileTemplateModule,
     AnswerParamsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
