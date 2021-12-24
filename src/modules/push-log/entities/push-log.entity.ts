@@ -18,4 +18,7 @@ export class PushLog extends CommonEntity {
 
   @Column('simple-json')
   answer: string;
+
+  @Column('timestamp', { nullable: true })
+  eat_time?: Date;
 }

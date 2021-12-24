@@ -5,10 +5,11 @@ import { ConfigModule } from '@nestjs/config';
 import { MobileTemplateModule } from '../template/mobile-template/mobile-template.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { YmPush } from './entities/ym-push.entity';
+import { User } from '../user/entities/user.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([YmPush]),
+    TypeOrmModule.forFeature([YmPush, User]),
     ConfigModule,
     MobileTemplateModule,
   ],

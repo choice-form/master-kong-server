@@ -91,13 +91,13 @@ export class PushLogService {
   }
 
   async saveFirstSurvey(data: SaveFirstSurveyDto) {
-    await this.save(data);
+    await this.save(data, true);
     await this.pushLogic(data);
   }
 
-  async save(data: SaveFirstSurveyDto) {
+  async save(data: SaveFirstSurveyDto, first = false) {
     const { result, resultId, surveyId, answer } = data;
-    const { mobile } = await this.answerService.dispose(data);
+    const { mobile, eatTime } = await this.answerService.dispose(data);
     const user = await this.userRepository.findOne({ mobile });
     if (!user) {
       throw new HttpException(
@@ -113,6 +113,17 @@ export class PushLogService {
       answer,
     };
 
+    if (first) {
+      newLog.eat_time = eatTime;
+    }
+
     await this.pushLogRepository.save(newLog);
+  }
+
+  async findList() {
+    const res = await this.userRepository.findAndCount({
+      relations: ['pushLogList'],
+    });
+    return res;
   }
 }

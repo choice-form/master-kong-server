@@ -12,4 +12,9 @@ export class User extends CommonEntity {
 
   @OneToMany(() => PushLog, (pushLog) => pushLog.user)
   pushLogList: PushLog[];
+
+  @Column({
+    default: 0,
+  })
+  pushCount: number;
 }

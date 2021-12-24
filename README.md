@@ -12,3 +12,11 @@
 
 1. 用户列表 - 推送次数、回复次数
 2. 问卷回复列表
+
+问卷
+
+1. 设置回复完成 webhooks
+
+- 第一份问卷 `/v1/push-log/first?answer={{answer}}&result={{result}}&resultId={{resultId}}&surveyId={{surveyId}}`
+
+- 第二份问卷 `/v1/push-log/latest?answer={{answer}}&result={{result}}&resultId={{resultId}}&surveyId={{surveyId}}`

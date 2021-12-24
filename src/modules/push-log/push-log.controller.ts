@@ -6,12 +6,11 @@ import {
   Patch,
   Param,
   Delete,
-  Query,
 } from '@nestjs/common';
 import { PushLogService } from './push-log.service';
 import { CreatePushLogDto } from './dto/create-push-log.dto';
 import { UpdatePushLogDto } from './dto/update-push-log.dto';
-import { FindAllPushLogDto } from './dto/find-all-push-log.dto';
+// import { FindAllPushLogDto } from './dto/find-all-push-log.dto';
 import { SaveFirstSurveyDto } from './dto/save-first-survey.dto';
 
 @Controller('push-log')
@@ -24,8 +23,9 @@ export class PushLogController {
   }
 
   @Get()
-  findAll(@Query() query: FindAllPushLogDto) {
-    return this.pushLogService.findAll(query);
+  findAll() {
+    // return this.pushLogService.findAll(query);
+    return this.pushLogService.findList();
   }
 
   @Patch(':id')
