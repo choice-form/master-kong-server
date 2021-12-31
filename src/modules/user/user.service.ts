@@ -30,7 +30,9 @@ export class UserService {
     let findOpts: FindManyOptions<User> = null;
     findOpts = mergePaging(findOpts, findAllUserDto);
     findOpts.relations = ['pushLogList'];
-
+    findOpts.order = {
+      name: 'ASC',
+    };
     return this.userRepository.findAndCount(findOpts);
   }
 

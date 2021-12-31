@@ -90,14 +90,15 @@ export class PushLogService {
     }
   }
 
-  async saveFirstSurvey(data: SaveFirstSurveyDto) {
-    await this.save(data, true);
+  async saveFirstSurvey(data: SaveFirstSurveyDto, first: boolean) {
+    console.log(data);
+    await this.save(data, first);
     await this.pushLogic(data);
   }
 
   async save(data: SaveFirstSurveyDto, first = false) {
     const { result, resultId, surveyId, answer } = data;
-    const { mobile, eatTime } = await this.answerService.dispose(data);
+    const { mobile, eatTime } = await this.answerService.dispose(data, first);
     const user = await this.userRepository.findOne({ mobile });
     if (!user) {
       throw new HttpException(
@@ -121,9 +122,28 @@ export class PushLogService {
   }
 
   async findList() {
-    const res = await this.userRepository.findAndCount({
+    const [array, total] = await this.userRepository.findAndCount({
       relations: ['pushLogList'],
     });
-    return res;
+
+    const tmpArr = array.filter((log) => {
+      return log.pushLogList.length > 0;
+    });
+
+    const list = tmpArr.sort((a, b) => {
+      const aLogList = a.pushLogList;
+      const bLogList = b.pushLogList;
+      const aEat = aLogList.find((log) => {
+        return !!log.eat_time;
+      });
+      const bEat = bLogList.find((log) => {
+        return !!log.eat_time;
+      });
+
+      return (
+        new Date(aEat.eat_time).getTime() - new Date(bEat.eat_time).getTime()
+      );
+    });
+    return [list, list.length];
   }
 }

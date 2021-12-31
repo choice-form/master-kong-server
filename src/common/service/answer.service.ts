@@ -22,9 +22,9 @@ export class AnswerService {
     return this.answerParamService.getOne();
   }
 
-  async dispose(data: SaveFirstSurveyDto) {
+  async dispose(data: SaveFirstSurveyDto, first = true) {
     const nodeList = this.preAnalyze(data);
-    return this.analyze(nodeList);
+    return this.analyze(nodeList, first);
   }
 
   preAnalyze(data: SaveFirstSurveyDto): INode[] {
@@ -33,8 +33,10 @@ export class AnswerService {
     return nodeList;
   }
 
-  // TODO: 需要实现,返回一个吃面时间
-  async analyze(result: INode[]): Promise<{ eatTime: Date; mobile: string }> {
+  async analyze(
+    result: INode[],
+    first = true,
+  ): Promise<{ eatTime: Date; mobile: string }> {
     const { eat_time_node_title, mobile_node_title } =
       await this.answerParamService.getOne();
     let eatTime: Date = null;
@@ -47,6 +49,16 @@ export class AnswerService {
       return n.title === mobile_node_title;
     });
 
+    if (first) {
+      if (eatNode && eatNode.options) {
+        const [date, time] = eatNode.options;
+        const { value: d } = date;
+        const { value: t } = time;
+        eatTime = new Date(dayjs(`${d} ${t}`).format());
+      } else {
+        throw new HttpException('not found time of eat', HttpStatus.FORBIDDEN);
+      }
+    }
     if (mobileNode.options) {
       const [opts] = mobileNode.options;
       mobile = opts.value;
@@ -54,14 +66,6 @@ export class AnswerService {
       throw new HttpException('not found mobile', HttpStatus.FORBIDDEN);
     }
 
-    if (eatNode.options) {
-      const [date, time] = eatNode.options;
-      const { value: d } = date;
-      const { value: t } = time;
-      eatTime = new Date(dayjs(`${d} ${t}`).format());
-    } else {
-      throw new HttpException('not found time of eat', HttpStatus.FORBIDDEN);
-    }
     return {
       mobile,
       eatTime,

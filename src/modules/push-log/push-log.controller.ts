@@ -6,15 +6,13 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
+  Options,
 } from '@nestjs/common';
 import { PushLogService } from './push-log.service';
 import { CreatePushLogDto } from './dto/create-push-log.dto';
 import { UpdatePushLogDto } from './dto/update-push-log.dto';
 import { SaveFirstSurveyDto } from './dto/save-first-survey.dto';
-import { AuthGuard } from '@nestjs/passport';
 
-@UseGuards(AuthGuard('jwt'))
 @Controller('push-log')
 export class PushLogController {
   constructor(private readonly pushLogService: PushLogService) {}
@@ -42,10 +40,20 @@ export class PushLogController {
 
   @Post('first')
   saveFirstSurvey(@Body() query: SaveFirstSurveyDto) {
-    return this.pushLogService.saveFirstSurvey(query);
+    return this.pushLogService.saveFirstSurvey(query, true);
+  }
+  @Options('first')
+  optionsFirstSurvey(@Body() query: SaveFirstSurveyDto) {
+    return this.pushLogService.saveFirstSurvey(query, true);
   }
   @Post('latest')
   saveLatestSurvey(@Body() query: SaveFirstSurveyDto) {
-    return this.pushLogService.save(query);
+    console.log('query', query);
+    return this.pushLogService.save(query, false);
+  }
+  @Options('latest')
+  optionsLatestSurvey(@Body() query: SaveFirstSurveyDto) {
+    console.log('query', query);
+    return this.pushLogService.save(query, false);
   }
 }
