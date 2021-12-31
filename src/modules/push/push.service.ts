@@ -37,4 +37,13 @@ export class PushService {
       res: JSON.stringify(res),
     });
   }
+
+  async pushTemp(payload: { mobile: string; content: string }) {
+    const res = await this.ymApi.sendMessageByYm({
+      mobile: payload.mobile,
+      content: payload.content,
+    });
+    console.log(res);
+    return res;
+  }
 }

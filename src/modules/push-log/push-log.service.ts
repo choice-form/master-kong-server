@@ -106,6 +106,18 @@ export class PushLogService {
         HttpStatus.FORBIDDEN,
       );
     }
+    const log = await this.pushLogRepository.findOne({
+      where: {
+        user,
+        surveyId,
+      },
+    });
+    if (log) {
+      throw new HttpException(
+        `the answer of ${surveyId} is exist`,
+        HttpStatus.FORBIDDEN,
+      );
+    }
     const newLog: PushLog = {
       surveyId,
       result,

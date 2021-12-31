@@ -6,6 +6,7 @@ import { MobileTemplateModule } from '../template/mobile-template/mobile-templat
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { YmPush } from './entities/ym-push.entity';
 import { User } from '../user/entities/user.entity';
+import { PushController } from './push.controller';
 
 @Module({
   imports: [
@@ -15,5 +16,6 @@ import { User } from '../user/entities/user.entity';
   ],
   providers: [PushService, YMApi],
   exports: [PushService],
+  controllers: [PushController],
 })
 export class PushModule {}
