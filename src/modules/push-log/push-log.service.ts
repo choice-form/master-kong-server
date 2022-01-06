@@ -152,9 +152,18 @@ export class PushLogService {
         return !!log.eat_time;
       });
 
-      return (
-        new Date(aEat.eat_time).getTime() - new Date(bEat.eat_time).getTime()
-      );
+      if (aEat && bEat) {
+        return (
+          new Date(aEat.eat_time).getTime() - new Date(bEat.eat_time).getTime()
+        );
+      }
+
+      if (aEat && !bEat) {
+        return -1;
+      }
+      if (bEat && !aEat) {
+        return 1;
+      }
     });
     return [list, list.length];
   }
