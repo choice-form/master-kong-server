@@ -39,6 +39,7 @@ export class PushService {
   }
 
   async pushTemp(payload: { mobile: string; content: string }) {
+    console.log('payload :>> ', payload);
     const res = await this.ymApi.sendMessageByYm({
       mobile: payload.mobile,
       content: payload.content,
