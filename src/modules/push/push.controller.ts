@@ -1,9 +1,14 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Post, Req } from '@nestjs/common';
 import { PushService } from './push.service';
+
+class SendMessageDto {
+  mobile: string;
+  content: string;
+}
 
 @Controller('push')
 export class PushController {
-  constructor(private readonly pushService: PushService) { }
+  constructor(private readonly pushService: PushService) {}
 
   @Post('')
   async push(@Body() body: { mobile: string }) {
@@ -14,8 +19,8 @@ export class PushController {
       content,
     });
   }
-  @Post('mobile')
-  async PushMobileMessage(@Body() body: { mobile: string; content: string }) {
+  @Post('/mobile')
+  async pushMobileMessage(@Body() body: SendMessageDto) {
     const { mobile, content } = body;
     return this.pushService.pushTemp({
       mobile,

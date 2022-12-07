@@ -33,7 +33,11 @@ export class PushLogService {
   }
 
   findOne(id: number) {
-    return this.pushLogRepository.findOne(id);
+    return this.pushLogRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
   }
 
   update(id: number, updatePushLogDto: UpdatePushLogDto) {
@@ -99,7 +103,11 @@ export class PushLogService {
   async save(data: SaveFirstSurveyDto, first = false) {
     const { result, resultId, surveyId, answer } = data;
     const { mobile, eatTime } = await this.answerService.dispose(data, first);
-    const user = await this.userRepository.findOne({ mobile });
+    const user = await this.userRepository.findOne({
+      where: {
+        mobile: mobile,
+      },
+    });
     if (!user) {
       throw new HttpException(
         `the user of ${mobile} is not found`,

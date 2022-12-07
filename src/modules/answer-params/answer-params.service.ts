@@ -31,7 +31,7 @@ export class AnswerParamsService {
   }
 
   getOne() {
-    return this.answerParamsRepository.findOne();
+    return this.answerParamsRepository.findOne({});
   }
 
   update(id: number, updateAnswerParamDto: UpdateAnswerParamDto) {

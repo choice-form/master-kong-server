@@ -28,7 +28,11 @@ export class SysUserService {
   }
 
   findOne(id: string) {
-    return this.sysUserRepository.findOne(id);
+    return this.sysUserRepository.findOne({
+      where: {
+        id: +id,
+      },
+    });
   }
 
   findByName(email: string, hasPassword = false) {
@@ -44,7 +48,11 @@ export class SysUserService {
   }
 
   async update(id: string, updateSysUserDto: UpdateSysUserDto) {
-    const user = await this.sysUserRepository.findOne(id);
+    const user = await this.sysUserRepository.findOne({
+      where: {
+        id: +id,
+      },
+    });
     if (!user) {
       throw new HttpException('user is not found', HttpStatus.FORBIDDEN);
     }

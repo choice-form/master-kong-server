@@ -27,7 +27,9 @@ export class MobileTemplateService {
   }
 
   findOne(id?: number) {
-    return this.mobileTemplateRepository.findOne(id);
+    return this.mobileTemplateRepository.findOneBy({
+      id: id,
+    });
   }
 
   findByName(name: string) {
